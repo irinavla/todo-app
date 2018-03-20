@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, state,transition, animate, keyframes, query, stagger } from '@angular/animations';
 
+import { DataService } from '../data.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -39,22 +41,26 @@ btnText = "Add a list item";
 
 goalText = 'My first list item';
 
-goals = ['Buy groceries', 'Go to the car service', 'Attend a meeting'];
+goals = [];
 
-  constructor() { }
+  constructor(private _data: DataService) { }
 
   ngOnInit() {
+    this._data.goal.subscribe( res => this.goals = res );
     this.itemCount = this.goals.length;
+    this._data.changeGoal(this.goals);
   }
 
   addItem() {
     this.goals.push(this.goalText);
     this.goalText = '';
     this.itemCount = this.goals.length;
+    this._data.changeGoal(this.goals);
   }
 
   removeItem(i) {
     this.goals.splice(i, 1);
     this.itemCount = this.goals.length;
+    this._data.changeGoal(this.goals);
   }
 }
